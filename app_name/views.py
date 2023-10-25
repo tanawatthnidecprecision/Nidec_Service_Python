@@ -2,9 +2,9 @@
 from rest_framework import generics, permissions  
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework.views import APIView, View
 from rest_framework.response import Response
-
+from django.http import JsonResponse
 from django.db import connection, connections
 
 import hashlib
@@ -13,126 +13,43 @@ import random
 from app_name.handleRequest import *
 from app_name.database import *
 
-class InfoImageProfile(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print("InfoImageProfile>>>>",request.session.get('login'),":",str(request.session.get('token')))
-        print(str(request.session.get('token')), Database.selectWhere('picture_list','pic','user_index',str(request.session.get('login'))))
-        status_results['status'] = 'you have permission ' + str(request.session.get('token'))
-        
-        tmp =  status.HTTP_200_OK if status_results['status'] != "you don\'t have permission" else status.HTTP_500_INTERNAL_SERVER_ERROR
-        return Response(status_results,status=tmp)
+# views.py
 
-class ImagePic(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print("ImagePic>>>>",request.session.get('login'),":",str(request.session.get('token')))
-        status_results['status'] = 'you have permission ' + str(request.session.get('token'))
-        
-        tmp =  status.HTTP_200_OK if status_results['status'] != "you don\'t have permission" else status.HTTP_500_INTERNAL_SERVER_ERROR
-        return Response(status_results,status=tmp)
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from .serializers import FileUploadSerializer
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
-class FakeAPI3(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print("FakeAPI3>>>>",request.session.get('login'),":",str(request.session.get('token')))
-        status_results['status'] = 'you have permission ' + str(request.session.get('token'))
-        request.session.modified = True
-        tmp =  status.HTTP_200_OK if status_results['status'] != "you don\'t have permission" else status.HTTP_500_INTERNAL_SERVER_ERROR
-        return Response(status_results,status=tmp)
-    
-class FakeAPI(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print("FakeAPI>>>>",request.session.get('login'),":",str(request.session.get('token')))
-        status_results['status'] = 'you have permission ' + str(request.session.get('token'))
-        request.session.modified = True
-        tmp =  status.HTTP_200_OK if status_results['status'] != "you don\'t have permission" else status.HTTP_500_INTERNAL_SERVER_ERROR
-        return Response(status_results,status=tmp)
-    
-class FakeAPI2(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print("FakeAPI2>>>>",request.session.get('login'),":",str(request.session.get('token')))
-        status_results['status'] = 'you have permission ' + str(request.session.get('token'))
-        request.session.modified = True
-        tmp =  status.HTTP_200_OK if status_results['status'] != "you don\'t have permission" else status.HTTP_500_INTERNAL_SERVER_ERROR
-        return Response(status_results,status=tmp)
-    
-class Position(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print(str(request.session.get('token')))
-        if(request.POST['position_index'] and handleEvent.handleToken(request)):
-            sql_query = "select * from position_control where position_index = %s"
-            with connections['user_lists'].cursor() as cursor:
-                cursor.execute(sql_query, [request.POST['position_index']])
-                results = cursor.fetchall()
+class FileUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
 
-            status_results = {}
-            #if handleEvent.handleResults(results):
-            #    
-            #else:
-            #    status_results['status'] = 'none'
-            status_results['status'] = results
-            tmp =  status.HTTP_200_OK if status_results['status'] != "none" else status.HTTP_500_INTERNAL_SERVER_ERROR
-            return Response(status_results,status=tmp)
+    def post(self, request, *args, **kwargs):
+        print('tt')
+        serializer = FileUploadSerializer(data=request.data)
+
+        if serializer.is_valid():
+            uploaded_file = serializer.validated_data['file']
+
+            # บันทึกไฟล์ลงในเซิร์ฟเวอร์ (ในที่นี้ใช้ FileSystemStorage)
+            fs = FileSystemStorage()
+            filename = fs.save(uploaded_file.name, uploaded_file)
+
+            # สร้าง URL สำหรับไฟล์ที่บันทึกลงในเซิร์ฟเวอร์
+            file_url = fs.url(filename)
+
+            return Response({'message': 'ไฟล์ถูกอัปโหลดเรียบร้อย', 'file_url': file_url}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'status':'error'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-class PositionLevel(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print(str(request.session.get('token')))
-        if(request.POST['level_code'] and handleEvent.handleToken(request)):
-            sql_query = "select * from position_level where level_code = %s"
-            with connections['user_lists'].cursor() as cursor:
-                cursor.execute(sql_query, [request.POST['level_code']])
-                results = cursor.fetchall()
-
-            status_results = {}
-            status_results['status'] = results
-            tmp =  status.HTTP_200_OK if status_results['status'] != "none" else status.HTTP_500_INTERNAL_SERVER_ERROR
-            return Response(status_results,status=tmp)
-        else:
-            return Response({'status':'error'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-class DepartmentControl(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        status_results = {}
-        print(str(request.session.get('token')))
-        if(request.POST['department_index']):
-            sql_query = "select * from department_control where department_index = %s"
-            with connections['user_lists'].cursor() as cursor:
-                cursor.execute(sql_query, [request.POST['department_index']])
-                results = cursor.fetchall()
-
-            status_results = {}
-            status_results['status'] = results
-            tmp =  status.HTTP_200_OK if status_results['status'] != "none" else status.HTTP_500_INTERNAL_SERVER_ERROR
-            return Response(status_results,status=tmp)
-        else:
-            return Response({'status':'error'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
     permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        sql_query = "select user_index from user_list where user_list.id = %s and user_list.password = %s"
-        with connections['user_lists'].cursor() as cursor:
-            cursor.execute(sql_query, [request.POST['name'], hashlib.md5(request.POST['password'].encode('utf-8')).hexdigest().upper()])
-
-            results = cursor.fetchall()
-        
+    def post(self, request):   
+        rule = "user_list.id = '{}' and user_list.password = '{}'".format(request.POST['name'], hashlib.md5(request.POST['password'].encode('utf-8')).hexdigest().upper())  
+        results = Database.selectWhere('user_list','user_index',rule)
         status_results = {}
-
         if len(results) > 0 and results:
             token = str(random.randint(0,10))
             token += str(random.randint(0,10))
@@ -147,9 +64,7 @@ class Login(APIView):
             status_results['status'] = 'invalid'
             request.session['login'] = ""
             request.session['token'] = ""
-            
-        request.session.modified = True
-        print("Login>>>>",request.session.get('login'),":",str(request.session.get('token')))
+        request.session.save()
         tmp =  status.HTTP_200_OK if status_results['status'] != "Login Invalid" else status.HTTP_500_INTERNAL_SERVER_ERROR
         return Response(status_results,status=tmp)
 

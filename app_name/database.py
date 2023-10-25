@@ -8,10 +8,9 @@ from django.db import connection, connections
 
 
 class Database():
-    def selectWhere(table_name, select, condition, value):
-        sql_query = "select {} from {} where {} = %s".format(select,table_name, condition)
-        print(sql_query)
-        with connections['user_lists'].cursor() as cursor:
-            cursor.execute(sql_query,[value])
+    def selectWhere(table_name, select, query, database_name = 'user_lists'):
+        sql_query = "select {} from {} where {}".format(select,table_name, query)
+        with connections[database_name].cursor() as cursor:
+            cursor.execute(sql_query)
             results = cursor.fetchall()
         return results

@@ -72,16 +72,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project_name.wsgi.application'
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',  # หรือ 'rest_framework.authentication.BasicAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',  # เพิ่มเทมเพลตนี้
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+    
     # ...
 }
 # Database
@@ -105,6 +114,17 @@ DATABASES = {
         'USER': 'odoo',
         'PASSWORD': 'odoo',
         'HOST': '172.30.1.9',
+        'PORT': '5432',
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        }
+    },
+    'slip': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'request_slip_test',
+        'USER': 'user_setup',
+        'PASSWORD': 'user_setup',
+        'HOST': '172.30.1.15',
         'PORT': '5432',
         'OPTIONS': {
             'client_encoding': 'UTF8',
@@ -167,5 +187,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 3600 
+SESSION_COOKIE_AGE = 360000
 SESSION_SAVE_EVERY_REQUEST =True
+
+APPEND_SLASH = False
