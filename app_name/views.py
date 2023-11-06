@@ -12,43 +12,24 @@ import json
 import random
 from app_name.handleRequest import *
 from app_name.database import *
-
+import os
 # views.py
-
+from django.http import FileResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .serializers import FileUploadSerializer
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
-class FileUploadView(APIView):
-    parser_classes = (MultiPartParser, FormParser)
-
-    def post(self, request, *args, **kwargs):
-        print('tt')
-        serializer = FileUploadSerializer(data=request.data)
-
-        if serializer.is_valid():
-            uploaded_file = serializer.validated_data['file']
-
-            # บันทึกไฟล์ลงในเซิร์ฟเวอร์ (ในที่นี้ใช้ FileSystemStorage)
-            fs = FileSystemStorage()
-            filename = fs.save(uploaded_file.name, uploaded_file)
-
-            # สร้าง URL สำหรับไฟล์ที่บันทึกลงในเซิร์ฟเวอร์
-            file_url = fs.url(filename)
-
-            return Response({'message': 'ไฟล์ถูกอัปโหลดเรียบร้อย', 'file_url': file_url}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from django.http import HttpResponse
+from django.shortcuts import render
+from rest_framework.views import exception_handler
 
 class Login(APIView):
     permission_classes = [permissions.AllowAny]
     def post(self, request):   
         rule = "user_list.id = '{}' and user_list.password = '{}'".format(request.POST['name'], hashlib.md5(request.POST['password'].encode('utf-8')).hexdigest().upper())  
-        results = Database.selectWhere('user_list','user_index',rule)
+        results = DatabaseQuery.selectWhere('user_list','user_index',rule)
         status_results = {}
         if len(results) > 0 and results:
             token = str(random.randint(0,10))

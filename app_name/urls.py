@@ -2,7 +2,12 @@
 
 from django.urls import path
 from .views import *
-from .user_list import *
+from .restful.user_list_service import *
+from .restful.paperless_service.claimSlip import *
+from .restful.approve_service import *
+from .restful.personal_service import * 
+from app_name.storage import FileUploadView
+from .mail import Mail
 
 urlpatterns = [
     # API 
@@ -12,26 +17,15 @@ urlpatterns = [
     path('notify_intranets/',NotifyIntranets.as_view(), name="notify_intranets"),
     
     path('upload/', FileUploadView.as_view(), name='file-upload'),
+    path('approve/', Approve.as_view(), name='approve'),
+    path('approve_flow/', ApproveFlow.as_view(), name='approve_flow'),
+    path('approve_flow/<int:pk>/', ApproveFlow.as_view(), name='approve_flow'),
+    path('claim_slip/', ClaimSlip.as_view(), name='claim_slip'),
+    
+    path('info/', InfoUserList.as_view(), name='info'),
+    path('name_service/', nameSearch.as_view(), name='info'),
+    path('mail/', Mail.as_view(), name='claim_slip'),
     
     path('logout/', Logout.as_view(), name='logout'),
+
 ]
-
-
-    #path('login/', Login.as_view(), name='login'),
-
-    #path('get_position_user_list/', Position.as_view(), name='get_position_user_list'),
-    #path('get_position_level_user_list/', PositionLevel.as_view(), name='get_position_level_user_list'),
-    #path('get_department_control/', DepartmentControl.as_view(), name='get_department_control'),
-
-    # API Service 
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #path('fake/', FakeAPI.as_view(), name='picture_profile'),
-    #
-    #path('logout/', Logout.as_view(), name='logout'),

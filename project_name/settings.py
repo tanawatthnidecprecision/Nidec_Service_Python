@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'app_name',
     'rest_framework'
 ]
@@ -49,10 +51,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'project_name.urls'
-
+CORS_ALLOW_ALL_ORIGINS = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,14 +77,14 @@ WSGI_APPLICATION = 'project_name.wsgi.application'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',  # หรือ 'rest_framework.authentication.BasicAuthentication'
+        # 'rest_framework.authentication.TokenAuthentication',  # หรือ 'rest_framework.authentication.BasicAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -90,7 +94,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
-    
+
     # ...
 }
 # Database
@@ -121,10 +125,10 @@ DATABASES = {
     },
     'slip': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'request_slip_test',
-        'USER': 'user_setup',
-        'PASSWORD': 'user_setup',
-        'HOST': '172.30.1.15',
+        'NAME': 'request_silp_test',
+        'USER': 'odoo',
+        'PASSWORD': 'odoo',
+        'HOST': '172.30.1.9',
         'PORT': '5432',
         'OPTIONS': {
             'client_encoding': 'UTF8',
@@ -144,6 +148,16 @@ DATABASES = {
         }
     }
     """
+MEDIA_URL = ''
+MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'onemail.one.th'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = 'auth@nidec-precision.co.th'
+EMAIL_HOST_PASSWORD = 'Nis_2022'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -181,6 +195,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3030',
+    'http://127.0.0.1:5500'
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -188,6 +206,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 360000
-SESSION_SAVE_EVERY_REQUEST =True
+SESSION_SAVE_EVERY_REQUEST = True
 
 APPEND_SLASH = False
