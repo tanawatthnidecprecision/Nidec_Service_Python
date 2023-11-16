@@ -25,8 +25,7 @@ class Approve(APIView):
         return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
     def get(self, request):
-        value = Database.selectWhere(
-            'approve_process', '*', request.GET['query_key'], request.GET['query_value'], 'slip')[0]
+        value = Database.selectWhere('approve_process', '*', request.GET['query_key'], request.GET['query_value'], 'slip')[0]
         return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
 
@@ -40,8 +39,10 @@ class ApproveFlow(APIView):
                 pamary_key = request.data.get('approve_process_flow_id', None)
                 if pamary_key == None:
                     return pamary_key
-                condition = "{} = {}".format('approve_process_flow_id',pamary_key)
-                results = Database.update('approve_process_flow', jsonTemp, condition, 'slip')
+                condition = "{} = {}".format(
+                    'approve_process_flow_id', pamary_key)
+                results = Database.update(
+                    'approve_process_flow', jsonTemp, condition, 'slip')
                 return JsonResponse({'status': 'successful', 'data': results}, safe=False)
             else:
                 raise Exception("ไม่มีข้อมูลเพื่อทำการอัปเดต")

@@ -16,25 +16,38 @@ class Structure(APIView):
 
     def get(self, request):
         try:
-            print('A')
-            if request.GET['query_like']:
-                print('AA')
+            if request.GET['query_where_raw'] and request.GET['query_like']:
                 tmp = ""
                 if(request.GET['query_value'].isdigit()):
                     tmp = "= " + request.GET['query_value']
                 else:
                     tmp = "like \'%" + request.GET['query_value']+"%\'"
+                print(self.table_name, '*', request.GET['query_like']+" "+ tmp + request.GET['query_where_raw'])
                 value = DatabaseQuery.selectWhere(
-                self.table_name, '*', request.GET['query_like']+" "+ tmp, self.database_name)
-                print('AAA')
+                self.table_name, '*', request.GET['query_like']+" "+ tmp + request.GET['query_where_raw'], self.database_name)
                 return JsonResponse({'status': 'successful', 'data': value}, safe=False)
-            else:
-                raise Exception('error')
         except:
-            print('B')
-            value = Database.selectWhere(
-                self.table_name, '*', request.GET['query_key'], request.GET['query_value'], self.database_name)[0]
-            return JsonResponse({'status': 'successful', 'data': value}, safe=False)
+            try:
+                print('A')
+                # like แบบ เงื่อนไข
+                # return
+                if request.GET['query_like']:
+                    tmp = ""
+                    if(request.GET['query_value'].isdigit()):
+                        tmp = "= " + request.GET['query_value']
+                    else:
+                        tmp = "like \'%" + request.GET['query_value']+"%\'"
+                    value = DatabaseQuery.selectWhere(
+                    self.table_name, '*', request.GET['query_like']+" "+ tmp, self.database_name)
+                    print('AAA')
+                    return JsonResponse({'status': 'successful', 'data': value}, safe=False)
+                else:
+                    raise Exception('error')
+            except:
+                print('B')
+                value = Database.selectWhere(
+                    self.table_name, '*', request.GET['query_key'], request.GET['query_value'], self.database_name)[0]
+                return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
     def post(self, request):
         try:
@@ -43,7 +56,8 @@ class Structure(APIView):
                 pamary_key = request.data.get(self.pamary_key, None)
                 if pamary_key == None:
                     return pamary_key
-                condition = "{} = {}".format(self.pamary_key,pamary_key)
+                condition = "{} = {}".format(self.pamary_key, pamary_key)
+                print(condition)
                 results = Database.update(self.table_name, jsonTemp, condition, self.database_name)
                 return JsonResponse({'status': 'successful', 'data': results}, safe=False)
             else:

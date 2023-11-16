@@ -32,9 +32,19 @@ class InfoUserList(APIView):
         return JsonResponse({'status':'successful','data': value} if value != "" else {'status':'error'}, safe=False)
     
     def get(self, request):
-        val = request.GET['query_value'];
-        print('user_index = \'{}\''.format(val))
-        value = DatabaseQuery.selectWhere('user_list','*','user_index = \'{}\''.format(val))[0]
+        value = ""
+        print('1')
+        try:
+            if(request.GET['query_raw']):
+                print('11')
+                value = DatabaseQuery.selectWhere(
+                    'user_list', '*', request.GET['query_raw'])[0]
+            else:
+                print('111')
+                raise('exception')
+        except:
+            print('00')
+            val = request.GET['query_value'];value = DatabaseQuery.selectWhere('user_list','*','user_index = \'{}\''.format(val))[0]
         return JsonResponse({'status':'successful','data': value} if value != "" else {'status':'error'}, safe=False)
 
 

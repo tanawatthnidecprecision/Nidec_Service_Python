@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-gop3(wx!e4_g=b0t^66jtq7rnp@^#3**3*gi*(n)rqi+04v3q5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '172.30.1.9'
+]
 
 
 # Application definition
@@ -156,6 +158,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'onemail.one.th'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'auth@nidec-precision.co.th'
 EMAIL_HOST_PASSWORD = 'Nis_2022'
 
@@ -197,8 +200,27 @@ STATIC_URL = 'static/'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3030',
-    'http://127.0.0.1:5500'
+    'http://127.0.0.1:5500',
+    'http://172.30.1.9:8200'
 ]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# สามารถกำหนดเพิ่มเติมตามความต้องการของคุณ
+# CORS_ALLOW_HEADERS += ['your-custom-header']
+
+# กำหนดว่า CORS ให้เข้าถึงทุกๆ โดเมน
+CORS_ORIGIN_ALLOW_ALL = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

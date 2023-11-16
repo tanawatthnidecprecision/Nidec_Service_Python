@@ -24,6 +24,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.views import exception_handler
 
+from rest_framework import serializers
+
+class FileUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
 class FileUploadView(APIView):
     parser_classes = (MultiPartParser, FormParser)
     def post(self, request, *args, **kwargs):

@@ -39,7 +39,7 @@ class Database():
         return results
 
     def update(table_name, json_temp, condition, database_name='user_lists'):
-        print('11>>')
+        print('11>>',json_temp)
         formatted_data = ",".join(["\"{}\"={}".format(key, (value if isinstance(value, int) else "\'" + value + "\'")) for key, value in json_temp.items()])
         print('22>>')
         sql_query = "update \"{}\" set {} where {} returning *".format(
