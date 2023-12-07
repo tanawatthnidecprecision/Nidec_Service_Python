@@ -18,6 +18,15 @@ class DatabaseQuery():
 
     
 class Database():
+    def selectLimit(table_name, select, limit, database_name='user_lists'):
+        sql_query = 'select {} from \"{}\" limit {}'.format(
+            select, table_name,  limit)
+        print(sql_query)
+        with connections[database_name].cursor() as cursor:
+            cursor.execute(sql_query)
+            results = cursor.fetchall()
+        return results
+    
     def selectWhere(table_name, select, query_key, query_value, database_name='user_lists'):
         sql_query = 'select {} from \"{}\" where \"{}\" {} {}'.format(
             select, table_name, query_key.replace("$like",""),"like" if "$like" in query_key else "=","\'%"+query_value+"%\'" if "$like" in query_key else (query_value if isinstance(query_value, int) else "\'{}\'".format(query_value)))

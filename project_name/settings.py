@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-gop3(wx!e4_g=b0t^66jtq7rnp@^#3**3*gi*(n)rqi+04v3q5
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '172.30.1.9'
+    '172.30.1.9',
+    '127.0.0.1'
 ]
 
 
@@ -131,6 +132,17 @@ DATABASES = {
         'USER': 'odoo',
         'PASSWORD': 'odoo',
         'HOST': '172.30.1.9',
+        'PORT': '5432',
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        }
+    },
+    'setting_systems': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'setting_systems',
+        'USER': 'user_setup',
+        'PASSWORD': 'user_setup',
+        'HOST': 'db01',
         'PORT': '5432',
         'OPTIONS': {
             'client_encoding': 'UTF8',
