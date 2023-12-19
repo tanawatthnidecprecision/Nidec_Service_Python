@@ -37,6 +37,7 @@ class Structure(APIView):
                         tmp = "= " + request.GET['query_value']
                     else:
                         tmp = "like \'%" + request.GET['query_value']+"%\'"
+                    print('AAAA')
                     value = DatabaseQuery.selectWhere(
                     self.table_name, '*', request.GET['query_like']+" "+ tmp, self.database_name)
                     print('AAA')

@@ -8,6 +8,7 @@ from .restful.paperless_service.supplierName import *
 from .restful.approve_service import *
 from .restful.personal_service import * 
 from .restful.setting_systems import *
+from .pagination.setting_systems import *
 from app_name.storage import FileUploadView
 from .mail import Mail
 
@@ -30,7 +31,10 @@ urlpatterns = [
     path('mail/', Mail.as_view(), name='claim_slip'),
 
     path('router/', routerPath.as_view(), name='claim_slip'),
-    
+    path('get_approve_alarm/', GetSystemSetting.as_view(), name='claim_slip'),
+    path('skip_approve_alarm/', SkipSystemSetting.as_view(), name='claim_slip'),
+    path('router/', routerPath.as_view(), name='claim_slip'),
+    path('type_list/', typeList.as_view(), name='claim_slip'),
     path('logout/', Logout.as_view(), name='logout'),
 
 ]

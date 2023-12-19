@@ -128,7 +128,7 @@ DATABASES = {
     },
     'slip': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'request_silp_test',
+        'NAME': 'request_slip_test',
         'USER': 'odoo',
         'PASSWORD': 'odoo',
         'HOST': '172.30.1.9',
@@ -140,6 +140,17 @@ DATABASES = {
     'setting_systems': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'setting_systems',
+        'USER': 'user_setup',
+        'PASSWORD': 'user_setup',
+        'HOST': 'db01',
+        'PORT': '5432',
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        }
+    },
+    'slip_db01': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'request_slip_test',
         'USER': 'user_setup',
         'PASSWORD': 'user_setup',
         'HOST': 'db01',

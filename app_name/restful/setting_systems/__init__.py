@@ -9,6 +9,12 @@ import json
 class routerPath(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
-        value = Database.selectLimit('router_intranets','*',1000,'setting_systems')
+        value = Database.selectLimit('router_intranets','*', 'permission', '1',1000, 'super_path', 'DESC','setting_systems')
+        return JsonResponse({'status':'successful','data': value} if value != "" else {'status':'error'}, safe=False)
+    
+class typeList(APIView):
+    permission_classes = [permissions.AllowAny]
+    def get(self, request):
+        value = DatabaseQuery.selectWhere('type_list','*', 'type_index = '+ request.GET['type_index'],'slip_db01')
         return JsonResponse({'status':'successful','data': value} if value != "" else {'status':'error'}, safe=False)
     
