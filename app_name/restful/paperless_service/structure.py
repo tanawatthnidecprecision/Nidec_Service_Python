@@ -52,22 +52,27 @@ class Structure(APIView):
 
     def post(self, request):
         try:
+            print('A>',request.data['method'])
             if request.data['method'] == 'update':
+                print('B>',request.data['method'])
                 jsonTemp = request.data.get('data', {})
                 pamary_key = request.data.get(self.pamary_key, None)
                 if pamary_key == None:
                     return pamary_key
                 condition = "{} = {}".format(self.pamary_key, pamary_key)
-                print(condition)
+                print('C>',condition)
                 results = Database.update(self.table_name, jsonTemp, condition, self.database_name)
                 return JsonResponse({'status': 'successful', 'data': results}, safe=False)
             else:
                 raise Exception('error')
         except:
+            print('except')
             jsonTemp = request.data['data']
             value = Database.insert(self.table_name, jsonTemp.keys(),
                                     jsonTemp.values(), self.database_name, self.pamary_key)
             return JsonResponse({'status': 'successful', 'data': value}, safe=False)
+        
+        
 
     def patch(self, request):
         jsonTemp = request.data.get('data', {})

@@ -10,12 +10,12 @@ class SkipSystemSetting(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
         database = DatabasePagination(request.GET['type_list'].split(','),'slip_db01')
-        value = database.getSkip(request.GET['user_index'], str(request.GET['skip']), str(request.GET['limit']))
+        value = database.getSkip(request.GET['user_index'], str(request.GET['skip']), str(request.GET['limit']), str(request.GET['read']))
         return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
 class GetSystemSetting(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
         database = DatabasePagination(request.GET['type_list'].split(','),'slip_db01')
-        value = database.getCount(request.GET['user_index'])
+        value = database.getCount(request.GET['user_index'], request.GET['read'])
         return JsonResponse({'status': 'successful', 'data': value}, safe=False)
