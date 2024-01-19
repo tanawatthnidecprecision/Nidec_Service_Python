@@ -158,6 +158,17 @@ DATABASES = {
         'OPTIONS': {
             'client_encoding': 'UTF8',
         }
+    },
+    'user_config': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'zPersonal_Rec',
+        'USER': 'maker_5th',
+        'PASSWORD': '5thEngineer',
+        'HOST': '172.30.1.15',
+        'PORT': '5432',
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        }
     }
 }
 """

@@ -8,6 +8,6 @@ from .structure import *
 class ClaimSlip(Structure):
     permission_classes = [permissions.AllowAny]
     def __init__(self):
-        super().__init__("claim_slip_systems", "claim_slip_index", "slip")
+        super().__init__("claim_slip_systems", "claim_slip_index", "slip_db01")
 
 

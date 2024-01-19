@@ -28,7 +28,6 @@ class Structure(APIView):
                 return JsonResponse({'status': 'successful', 'data': value}, safe=False)
         except:
             try:
-                print('A')
                 # like แบบ เงื่อนไข
                 # return
                 if request.GET['query_like']:

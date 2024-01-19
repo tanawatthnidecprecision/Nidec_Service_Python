@@ -21,11 +21,11 @@ class Approve(APIView):
                                     int(request.data['type_index']),
                                     int(request.data['department_index']),
                                     int(request.data['slip_index'])
-        ], 'slip')
+        ], 'slip_db01')
         return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
     def get(self, request):
-        value = Database.selectWhere('approve_process', '*', request.GET['query_key'], request.GET['query_value'], 'slip')[0]
+        value = Database.selectWhere('approve_process', '*', request.GET['query_key'], request.GET['query_value'], 'slip_db01')[0]
         return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
 
@@ -35,28 +35,55 @@ class ApproveFlow(APIView):
     def post(self, request):
         try:
             if request.data['method'] == 'update':
+                print('A')
                 jsonTemp = request.data.get('data', {})
-                pamary_key = request.data.get('approve_process_flow_id', None)
-                if pamary_key == None:
-                    return pamary_key
-                condition = "{} = {}".format(
-                    'approve_process_flow_id', pamary_key)
+                condition = request.data.get('condition', None)
+                print('-----------')
+                print(jsonTemp)
                 results = Database.update(
-                    'approve_process_flow', jsonTemp, condition, 'slip')
+                    'approve_process_flow', json.loads(jsonTemp), condition, 'slip_db01')
+                print(results)
                 return JsonResponse({'status': 'successful', 'data': results}, safe=False)
             else:
+                print('error =>')
                 raise Exception("ไม่มีข้อมูลเพื่อทำการอัปเดต")
         except:
+            print('B')
             value = Database.insert('approve_process_flow', [
                                     'approve_process_id',
                                     'approve_json'],
                                     [
                                         int(request.data['approve_process_id']),
                                         (request.data['approve_json'])
-            ], 'slip')
+            ], 'slip_db01')
             return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
     def get(self, request):
         value = Database.selectWhere(
-            'approve_process_flow', '*', request.GET['query_key'], request.GET['query_value'], 'slip')[0]
+            'approve_process_flow', '*', request.GET['query_key'], request.GET['query_value'], 'slip_db01')[0]
+        return JsonResponse({'status': 'successful', 'data': value}, safe=False)
+
+
+class ApproveAlarm(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        value = Database.insert('approve_alarm', [
+                                    'user_index',
+                                    'slip_index',
+                                    'section_name',
+                                    'date_alarm',
+                                    'type_index'],
+                                    [
+                                        int(request.data['user_index']),
+                                        int(request.data['slip_index']),
+                                        request.data['section_name'],
+                                        'now()',
+                                        int(request.data['type_index'])
+            ], 'slip_db01')
+        return JsonResponse({'status': 'successful', 'data': value}, safe=False)
+
+    def get(self, request):
+        value = Database.selectWhere(
+            'approve_alarm', '*', request.GET['query_key'], request.GET['query_value'], 'slip_db01')[0]
         return JsonResponse({'status': 'successful', 'data': value}, safe=False)
