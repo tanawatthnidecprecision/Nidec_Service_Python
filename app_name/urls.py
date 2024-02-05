@@ -10,6 +10,7 @@ from .restful.paperless_service.crudPaperless import *
 from .restful.approve_service import *
 from .restful.personal_service import * 
 from .restful.setting_systems import *
+from .restful.production_service import *
 from .pagination.setting_systems import *
 from app_name.storage import FileUploadView
 from .mail import Mail
@@ -36,6 +37,7 @@ urlpatterns = [
 
     path('router/', routerPath.as_view(), name='router'),
     path('user_config/', Config.as_view(), name='user_config'),
+    path('production/', Production.as_view(), name='production'),
     path('get_approve_alarm/', GetSystemSetting.as_view(), name='claim_slip'),
     path('skip_approve_alarm/', SkipSystemSetting.as_view(), name='claim_slip'),
     path('router/', routerPath.as_view(), name='claim_slip'),
