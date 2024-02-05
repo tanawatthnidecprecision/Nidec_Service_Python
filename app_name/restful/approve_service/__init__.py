@@ -36,12 +36,11 @@ class ApproveFlow(APIView):
         try:
             if request.data['method'] == 'update':
                 print('A')
-                jsonTemp = request.data.get('data', {})
+                jsonTemp = request.data.get('data')
                 condition = request.data.get('condition', None)
                 print('-----------')
-                print(jsonTemp)
-                results = Database.update(
-                    'approve_process_flow', json.loads(jsonTemp), condition, 'slip_db01')
+                print('>',jsonTemp, type(jsonTemp))
+                results = Database.update('approve_process_flow', json.loads(jsonTemp), condition, 'slip_db01')
                 print(results)
                 return JsonResponse({'status': 'successful', 'data': results}, safe=False)
             else:

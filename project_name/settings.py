@@ -169,7 +169,18 @@ DATABASES = {
         'OPTIONS': {
             'client_encoding': 'UTF8',
         }
-    }
+    },
+    'production': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'production',
+        'USER': 'user_setup',
+        'PASSWORD': 'user_setup',
+        'HOST': '172.30.1.15',
+        'PORT': '5432',
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        }
+    },
 }
 """
     'user_lists': {
