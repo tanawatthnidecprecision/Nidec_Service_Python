@@ -55,7 +55,7 @@ class FileUploadView(APIView):
 
     def get(self, request, *args, **kwargs):
         file_url = request.GET['image']
-        print(settings.MEDIA_ROOT)
+        print(settings.MEDIA_ROOT,BASE_DIR)
         file = open(settings.MEDIA_ROOT+'\\'+file_url.replace('/', '\\'), 'rb')
         response = FileResponse(file)
         return response
