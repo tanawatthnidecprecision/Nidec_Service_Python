@@ -38,7 +38,7 @@ class CurdPaperless(APIView):
                     raise Exception('error')
             except:
                 value = Database.selectWhere(
-                    table_name, '*', request.GET['query_key'], request.GET['query_value'], database_name)[0]
+                    table_name, '*', request.GET['query_key'], request.GET['query_value'], database_name)
                 return JsonResponse({'status': 'successful', 'data': value}, safe=False)
 
     def post(self, request):
